@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import RenderTag from './RenderTag';
 
 const hotQuestions = [
 	{
@@ -84,18 +85,13 @@ const RightSidebar = () => {
 				<h3 className="h3-bold text-dark200_light900">Popular Tags</h3>
 				<div className="mt-7 flex w-full flex-col gap-[30px]">
 					{popularTags.map((tag) => (
-						<Link
+						<RenderTag
 							key={tag._id}
-							href={`/tags/${tag._id}`}
-							className="flex items-center justify-between"
-						>
-							<p className="body-medium background-light800_dark300 text-light400_light500 rounded-md px-4 py-2">
-								{tag.tag.toUpperCase()}
-							</p>
-							<p className="body-medium text-dark500_light700">
-								{tag.tagCount}
-							</p>
-						</Link>
+							_id={tag._id}
+							name={tag.tag}
+							totalQuestions={tag.tagCount}
+							showCount
+						/>
 					))}
 				</div>
 			</div>
