@@ -42,7 +42,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.4",
-    "eslint-plugin-n": "^17.8.1",
+    "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.2.0",
     "eslint-plugin-tailwindcss": "^3.17.3",
     "postcss": "^8",
