@@ -5,6 +5,18 @@ const nextConfig = {
 		mdxRs: true,
 		serverComponentsExternalPackages: ['mongoose'],
 	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: '*',
+			},
+			{
+				protocol: 'https',
+				hostname: '*',
+			},
+		],
+	},
 };
 
 export default nextConfig;
