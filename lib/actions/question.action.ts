@@ -3,7 +3,12 @@
 import Question from '@/database/question.model';
 import { connectToDatabase } from '../mongoose';
 import Tag from '@/database/tag.model';
-import { CreateQuestionParams, GetQuestionsParams } from './shared.teypes';
+import {
+	CreateQuestionParams,
+	GetQuestionByIdParams,
+	GetQuestionsParams,
+	QuestionVoteParams,
+} from './shared.teypes';
 import User from '@/database/user.model';
 import { revalidatePath } from 'next/cache';
 
@@ -62,5 +67,105 @@ export async function createQuestion(params: CreateQuestionParams) {
 		revalidatePath(path);
 	} catch (error) {
 		console.log(error);
+	}
+}
+
+export async function getQuestionById(params: GetQuestionByIdParams) {
+	try {
+		connectToDatabase();
+
+		const { questionId } = params;
+
+		const question = await Question.findById(questionId)
+			.populate({
+				path: 'tags',
+				model: Tag,
+				select: '_id name',
+			}) //* populate คือการดึงข้อมูลมาจาก document จาก collection อื่นที่ปัจจุบันมีแค่ Object(id) โดยที่ path ก็คือ field ที่ต้องการเลือกและอ้างอิง model จากนั้นก็เลือก field จาก document ของ collection model ที่เลือก
+			.populate({
+				path: 'author',
+				model: User,
+				select: '_id clerkId name picture',
+			});
+
+		return question;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+export async function upvoteQuestion(params: QuestionVoteParams) {
+	try {
+		connectToDatabase();
+
+		const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+		console.log(userId);
+		console.log(typeof userId);
+		let updateQuery = {};
+
+		if (hasupVoted) {
+			updateQuery = { $pull: { upvotes: userId } };
+		} else if (hasdownVoted) {
+			updateQuery = {
+				$pull: { downvotes: userId },
+				$push: { upvotes: userId },
+			};
+		} else {
+			updateQuery = { $addToSet: { upvotes: userId } };
+		}
+
+		const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+			new: true,
+		});
+
+		if (!question) {
+			throw new Error('Question not found');
+		}
+
+		// Increment author's reputation
+
+		revalidatePath(path);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+export async function downvoteQuestion(params: QuestionVoteParams) {
+	try {
+		connectToDatabase();
+
+		const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+
+		let updateQuery = {};
+
+		if (hasdownVoted) {
+			updateQuery = {
+				$pull: { downvotes: userId },
+			}; //* if user click downvote button it undo to undownvote
+		} else if (hasupVoted) {
+			updateQuery = {
+				$pull: { upvotes: userId },
+				$push: { downvotes: userId },
+			}; //* if user has already upvoted and click downvote it will unupvote and going to downvote
+		} else {
+			updateQuery = { $addToSet: { downvotes: userId } };
+		} //* if user downvotes for the first time, it will add the downvote to the document
+
+		const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+			new: true,
+		});
+
+		if (!question) {
+			throw new Error('Question not found');
+		}
+
+		// Increment author's reputation
+
+		revalidatePath(path);
+	} catch (error) {
+		console.log(error);
+		throw error;
 	}
 }
