@@ -21,7 +21,7 @@ const AllAnswer = async ({
 	userId,
 	totalAnswers,
 	page,
-	filter,
+	// filter,
 }: Props) => {
 	const result = await getAnswers({ questionId });
 	return (

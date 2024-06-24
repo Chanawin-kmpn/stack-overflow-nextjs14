@@ -1,13 +1,15 @@
 'use client';
 import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
+import { viewQuestion } from '@/lib/actions/interaction.action';
 import {
 	downvoteQuestion,
 	upvoteQuestion,
 } from '@/lib/actions/question.action';
+import { toggleSaveQuestion } from '@/lib/actions/user.action';
 import { formatAndDivideNumber } from '@/lib/utils';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface Props {
 	type: string;
@@ -32,7 +34,20 @@ const Votes = ({
 }: Props) => {
 	const pathname = usePathname();
 	const router = useRouter();
-	const handleSave = () => {};
+
+	const handleSave = async () => {
+		if (!userId) {
+			console.log('Please login first');
+		}
+
+		await toggleSaveQuestion({
+			userId: JSON.parse(userId),
+			questionId: JSON.parse(itemId),
+			path: pathname,
+		});
+
+		return console.log('Success');
+	};
 	const handleVote = async (action: string) => {
 		if (!userId) {
 			console.log('Please login first');
@@ -82,6 +97,14 @@ const Votes = ({
 			return console.log('Success');
 		}
 	};
+
+	useEffect(() => {
+		viewQuestion({
+			questionId: JSON.parse(itemId),
+			userId: userId ? JSON.parse(userId) : undefined,
+		});
+	}, [itemId, userId, pathname, router]);
+
 	return (
 		<div className="flex gap-5">
 			<div className="flex-center gap-2.5">
@@ -135,7 +158,7 @@ const Votes = ({
 					height={18}
 					alt="star"
 					className="cursor-pointer"
-					onClick={() => handleSave}
+					onClick={handleSave}
 				/>
 			)}
 		</div>
