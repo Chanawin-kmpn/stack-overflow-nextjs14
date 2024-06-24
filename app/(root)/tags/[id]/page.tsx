@@ -1,16 +1,14 @@
 import QuestionCard from '@/components/cards/QuestionCard';
 import NoResult from '@/components/shared/NoResult';
 import LocalSearchbar from '@/components/shared/search/LocalSearchbar';
-import { IQuestion } from '@/database/question.model';
 import { getQuestionsByTagId } from '@/lib/actions/tag.action';
 import { URLProps } from '@/types';
-import { SearchParamsContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime';
 
 export default async function page({ params, searchParams }: URLProps) {
 	const result = await getQuestionsByTagId({
 		tagId: params.id,
 		page: 1,
-		searchQuery: SearchParamsContext.q,
+		searchQuery: searchParams.q,
 	});
 
 	console.log(result);
@@ -31,7 +29,7 @@ export default async function page({ params, searchParams }: URLProps) {
 
 			<div className="mt-10 flex w-full flex-col gap-6">
 				{result?.questions.length > 0 ? (
-					result?.questions.map((question: IQuestion) => (
+					result?.questions.map((question: any) => (
 						<QuestionCard
 							key={question._id}
 							_id={question._id}
