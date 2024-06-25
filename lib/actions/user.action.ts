@@ -44,23 +44,6 @@ export async function createUser(userDate: CreateUserParams) {
 	}
 }
 
-export async function updateUser(params: UpdateUserParams) {
-	try {
-		connectToDatabase();
-
-		const { clerkId, updateData, path } = params;
-
-		await User.findOneAndUpdate({ clerkId }, updateData, {
-			new: true,
-		});
-
-		revalidatePath(path);
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
-}
-
 export async function deleteUser(params: DeleteUserParams) {
 	try {
 		connectToDatabase();
@@ -237,6 +220,21 @@ export async function getUserAnswers(params: GetUserStatsParams) {
 			.populate({ path: 'author', select: '_id clerkId name picture' });
 
 		return { totalAnswers, answers: userAnswers };
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+export async function updateUser(params: UpdateUserParams) {
+	try {
+		connectToDatabase();
+
+		const { clerkId, updateData, path } = params;
+
+		await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
+
+		revalidatePath(path);
 	} catch (error) {
 		console.log(error);
 		throw error;
