@@ -20,10 +20,12 @@ interface Props {
 	views: number;
 	answers: Array<object>;
 	createdAt: Date;
+	clerkId?: string | null;
 }
 
 const QuestionCard = ({
 	_id,
+	clerkId,
 	title,
 	tags,
 	author,
@@ -46,6 +48,8 @@ const QuestionCard = ({
 					</Link>
 				</div>
 			</div>
+
+			{/* Edit and delete */}
 
 			<div className=" mt-3.5 flex flex-wrap gap-2">
 				{tags.map((tag) => (
