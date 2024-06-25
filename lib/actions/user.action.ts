@@ -188,6 +188,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
 			console.log('User not found!');
 		}
 
+		console.log(user);
 		const totalQuestions = await Question.countDocuments({ author: user._id });
 		const totalAnswers = await Answer.countDocuments({ author: user._id });
 

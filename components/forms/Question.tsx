@@ -19,28 +19,34 @@ import { QuestionsSchema } from '@/lib/validations';
 import { z } from 'zod';
 import { Badge } from '../ui/badge';
 import Image from 'next/image';
-import { createQuestion } from '@/lib/actions/question.action';
+import { createQuestion, editQuestion } from '@/lib/actions/question.action';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTheme } from '@/context/ThemeProvider';
 
-const type: any = 'create';
+// const type: any = 'create';
 
 interface Props {
 	mongoUserId: string;
+	type?: string;
+	questionDetails?: string;
 }
-const Question = ({ mongoUserId }: Props) => {
-	const { mode } = useRef(null);
+const Question = ({ mongoUserId, type, questionDetails }: Props) => {
+	const { mode } = useTheme();
 	const editorRef = useRef(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
 	const pathname = usePathname();
 
+	const parsedQuestionDetails = JSON.parse(questionDetails || '');
+
+	const groupedTags = parsedQuestionDetails.tags.map((tag: any) => tag.name);
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof QuestionsSchema>>({
 		resolver: zodResolver(QuestionsSchema),
 		defaultValues: {
-			title: '',
-			explanation: '',
-			tags: [],
+			title: parsedQuestionDetails.title || '',
+			explanation: parsedQuestionDetails.content || '',
+			tags: groupedTags || [],
 		},
 	});
 
@@ -49,13 +55,23 @@ const Question = ({ mongoUserId }: Props) => {
 		setIsSubmitting(true);
 		try {
 			// make an async call to your API -> create a question
-			await createQuestion({
-				title: values.title,
-				content: values.explanation,
-				tags: values.tags,
-				author: JSON.parse(mongoUserId),
-				path: pathname,
-			});
+			if (type === 'Edit') {
+				await editQuestion({
+					questionId: parsedQuestionDetails._id,
+					title: values.title,
+					content: values.explanation,
+					path: pathname,
+				});
+				router.push(`/question/${parsedQuestionDetails._id}`);
+			} else {
+				await createQuestion({
+					title: values.title,
+					content: values.explanation,
+					tags: values.tags,
+					author: JSON.parse(mongoUserId),
+					path: pathname,
+				});
+			}
 			// contain all form data
 			// navigate to home page
 			router.push('/');
@@ -145,7 +161,7 @@ const Question = ({ mongoUserId }: Props) => {
 									}}
 									onBlur={field.onBlur}
 									onEditorChange={(content) => field.onChange(content)}
-									initialValue={''}
+									initialValue={parsedQuestionDetails.content || ''}
 									init={{
 										height: 350,
 										menubar: false,
