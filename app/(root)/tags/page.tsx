@@ -2,11 +2,12 @@ import Filter from '@/components/shared/Filter';
 import LocalSearchbar from '@/components/shared/search/LocalSearchbar';
 import { TagFilters } from '@/constants/filter';
 import { getAllTags } from '@/lib/actions/tag.action';
+import { SearchParamsProps } from '@/types';
 import Link from 'next/link';
 import React from 'react';
 
-const page = async () => {
-	const result = await getAllTags({});
+const page = async ({ searchParams }: SearchParamsProps) => {
+	const result = await getAllTags({ searchQuery: searchParams.q });
 	return (
 		<>
 			<div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row">

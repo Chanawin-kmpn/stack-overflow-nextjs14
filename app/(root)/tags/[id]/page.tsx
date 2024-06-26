@@ -11,7 +11,7 @@ export default async function page({ params, searchParams }: URLProps) {
 		searchQuery: searchParams.q,
 	});
 
-	console.log(result);
+	// console.log(result);
 
 	return (
 		<>
@@ -19,7 +19,7 @@ export default async function page({ params, searchParams }: URLProps) {
 
 			<div className="mt-11 w-full">
 				<LocalSearchbar
-					route="/"
+					route={`/tags/${params.id}`}
 					iconPosition="left"
 					imgSrc="/assets/icons/search.svg"
 					placeholder="Search tag question"
