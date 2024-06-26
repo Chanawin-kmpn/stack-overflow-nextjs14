@@ -1,7 +1,6 @@
 import { getTopInteractedTags } from '@/lib/actions/tag.action';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 import { Badge } from '../ui/badge';
 import RenderTag from '../shared/RenderTag';
 
@@ -17,6 +16,7 @@ interface Props {
 
 const UserCard = async ({ user }: Props) => {
 	const interactedTags = await getTopInteractedTags({ userId: user._id });
+
 	return (
 		<Link
 			href={`/profile/${user.clerkId}`}
@@ -25,9 +25,9 @@ const UserCard = async ({ user }: Props) => {
 			<article className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-8">
 				<Image
 					src={user.picture}
+					alt="user profile picture"
 					width={100}
 					height={100}
-					alt="user profile picture"
 					className="rounded-full"
 				/>
 

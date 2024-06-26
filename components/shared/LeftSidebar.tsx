@@ -13,35 +13,36 @@ const LeftSidebar = () => {
 	return (
 		<section className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
 			<div className="flex flex-1 flex-col gap-6">
-				{sidebarLinks.map((link) => {
+				{sidebarLinks.map((item) => {
 					const isActive =
-						(pathName.includes(link.route) && link.route.length > 1) ||
-						pathName === link.route;
+						(pathName.includes(item.route) && item.route.length > 1) ||
+						pathName === item.route;
 
-					if (link.route === '/profile') {
+					if (item.route === '/profile') {
 						if (userId) {
-							link.route = `${link.route}/${userId}`;
+							item.route = `${item.route}/${userId}`;
 						} else {
 							return null;
 						}
 					}
+
 					return (
 						<Link
-							key={link.label}
-							href={link.route}
+							key={item.label}
+							href={item.route}
 							className={`${isActive ? 'primary-gradient rounded-lg text-light-900' : 'text-dark300_light900'} flex items-center justify-start gap-4 bg-transparent p-4`}
 						>
 							<Image
-								src={link.imgURL}
+								src={item.imgURL}
 								width={20}
 								height={20}
-								alt={`${link.label} link`}
+								alt={`${item.label} link`}
 								className={`${isActive ? '' : 'invert-colors'}`}
 							/>
 							<p
 								className={`${isActive ? 'base-bold' : 'base-medium'} max-lg:hidden`}
 							>
-								{link.label}
+								{item.label}
 							</p>
 						</Link>
 					);
@@ -65,7 +66,7 @@ const LeftSidebar = () => {
 					</Link>
 
 					<Link href="/sign-up">
-						<Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
+						<Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg border px-4 py-3 shadow-none">
 							<Image
 								src="/assets/icons/sign-up.svg"
 								width={20}
