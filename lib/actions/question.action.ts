@@ -25,6 +25,22 @@ export async function getQuestions(params: GetQuestionsParams) {
 
 		const query: FilterQuery<typeof Question> = {};
 
+		let sortOptions = {};
+
+		switch (filter) {
+			case 'newest':
+				sortOptions = { createdAt: -1 };
+				break;
+			case 'frequent':
+				sortOptions = { views: -1 };
+				break;
+			case 'unanswered':
+				query.answers = { $size: 0 };
+				break;
+			default:
+				break;
+		}
+
 		if (searchQuery) {
 			query.$or = [
 				{ title: { $regex: new RegExp(searchQuery, 'i') } },
@@ -38,7 +54,7 @@ export async function getQuestions(params: GetQuestionsParams) {
 				model: Tag,
 			})
 			.populate({ path: 'author', model: User })
-			.sort({ createdAt: -1 });
+			.sort(sortOptions);
 
 		return { questions };
 	} catch (error) {

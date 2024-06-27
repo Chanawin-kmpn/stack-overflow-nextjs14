@@ -8,7 +8,10 @@ import Link from 'next/link';
 import React from 'react';
 
 const page = async ({ searchParams }: SearchParamsProps) => {
-	const result = await getAllUsers({ searchQuery: searchParams.q });
+	const result = await getAllUsers({
+		searchQuery: searchParams.q,
+		filter: searchParams.filter,
+	});
 	return (
 		<>
 			<h1 className="h1-bold text-dark100_light900">All Users</h1>
