@@ -11,6 +11,7 @@ import {
 import { revalidatePath } from 'next/cache';
 import Question from '@/database/question.model';
 import Interaction from '@/database/interaction.model';
+import User from '@/database/user.model';
 
 export async function createAnswer(params: CreateAnswerParams) {
 	try {
@@ -28,6 +29,8 @@ export async function createAnswer(params: CreateAnswerParams) {
 		await Question.findByIdAndUpdate(question, {
 			$push: { answers: newAnswer._id },
 		});
+
+		await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
 
 		revalidatePath(path);
 	} catch (error) {
@@ -109,6 +112,14 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
 		if (!answer) {
 			throw new Error('Answer not found');
 		}
+
+		await User.findByIdAndUpdate(userId, {
+			$inc: { reputation: hasupVoted ? -2 : 2 },
+		});
+
+		await User.findByIdAndUpdate(answer.author, {
+			$inc: { reputation: hasupVoted ? -10 : 10 },
+		});
 		revalidatePath(path);
 	} catch (error) {
 		console.log(error);
@@ -142,6 +153,14 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
 		if (!answer) {
 			throw new Error('Answer not found');
 		}
+
+		await User.findByIdAndUpdate(userId, {
+			$inc: { reputation: hasdownVoted ? -2 : 2 },
+		});
+
+		await User.findByIdAndUpdate(answer.author, {
+			$inc: { reputation: hasdownVoted ? -10 : 10 },
+		});
 
 		revalidatePath(path);
 	} catch (error) {

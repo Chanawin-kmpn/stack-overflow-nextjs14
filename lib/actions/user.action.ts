@@ -263,7 +263,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 		const userQuestion = await Question.find({ author: userId })
 			.skip(skipAmount)
 			.limit(pageSize)
-			.sort({ views: -1, upvotes: -1 })
+			.sort({ views: -1, upvotes: -1, createdAt: -1 })
 			.populate({ path: 'tags', model: Tag, select: '_id name' })
 			.populate({ path: 'author', select: '_id clerkId name picture' });
 

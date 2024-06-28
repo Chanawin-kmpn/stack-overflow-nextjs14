@@ -1,4 +1,5 @@
 'use client';
+
 import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
 import { viewQuestion } from '@/lib/actions/interaction.action';
 import {
@@ -9,7 +10,7 @@ import { toggleSaveQuestion } from '@/lib/actions/user.action';
 import { formatAndDivideNumber } from '@/lib/utils';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 interface Props {
 	type: string;
@@ -36,22 +37,14 @@ const Votes = ({
 	const router = useRouter();
 
 	const handleSave = async () => {
-		if (!userId) {
-			console.log('Please login first');
-		}
-
 		await toggleSaveQuestion({
 			userId: JSON.parse(userId),
 			questionId: JSON.parse(itemId),
 			path: pathname,
 		});
-
-		return console.log('Success');
 	};
+
 	const handleVote = async (action: string) => {
-		if (!userId) {
-			console.log('Please login first');
-		}
 		if (action === 'upvote') {
 			if (type === 'Question') {
 				await upvoteQuestion({
@@ -62,7 +55,6 @@ const Votes = ({
 					path: pathname,
 				});
 			} else if (type === 'Answer') {
-				console.log('Answer upvote');
 				await upvoteAnswer({
 					answerId: JSON.parse(itemId),
 					userId: JSON.parse(userId),
@@ -71,8 +63,6 @@ const Votes = ({
 					path: pathname,
 				});
 			}
-
-			return console.log('Success');
 		}
 
 		if (action === 'downvote') {
@@ -85,7 +75,6 @@ const Votes = ({
 					path: pathname,
 				});
 			} else if (type === 'Answer') {
-				console.log('Answer downvote');
 				await downvoteAnswer({
 					answerId: JSON.parse(itemId),
 					userId: JSON.parse(userId),
@@ -94,7 +83,6 @@ const Votes = ({
 					path: pathname,
 				});
 			}
-			return console.log('Success');
 		}
 	};
 
@@ -121,12 +109,14 @@ const Votes = ({
 						className="cursor-pointer"
 						onClick={() => handleVote('upvote')}
 					/>
+
 					<div className="flex-center background-light700_dark400 min-w-[18px] rounded-sm p-1">
 						<p className="subtle-medium text-dark400_light900">
 							{formatAndDivideNumber(upvotes)}
 						</p>
 					</div>
 				</div>
+
 				<div className="flex-center gap-1.5">
 					<Image
 						src={
@@ -136,10 +126,11 @@ const Votes = ({
 						}
 						width={18}
 						height={18}
-						alt="upvote"
+						alt="downvote"
 						className="cursor-pointer"
 						onClick={() => handleVote('downvote')}
 					/>
+
 					<div className="flex-center background-light700_dark400 min-w-[18px] rounded-sm p-1">
 						<p className="subtle-medium text-dark400_light900">
 							{formatAndDivideNumber(downvotes)}
@@ -147,6 +138,7 @@ const Votes = ({
 					</div>
 				</div>
 			</div>
+
 			{type === 'Question' && (
 				<Image
 					src={
