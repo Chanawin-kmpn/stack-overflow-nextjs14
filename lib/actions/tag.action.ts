@@ -37,11 +37,13 @@ export async function getAllTags(params: GetAllTagsParams) {
 	try {
 		connectToDatabase();
 
-		const { searchQuery, filter } = params;
+		const { searchQuery, filter, page = 1, pageSize = 10 } = params;
 
 		const query: FilterQuery<typeof Tag> = searchQuery
 			? { name: { $regex: new RegExp(searchQuery, 'i') } }
 			: {};
+
+		const skipAmount = (page - 1) * pageSize;
 
 		let sortOptions = {};
 
@@ -63,9 +65,16 @@ export async function getAllTags(params: GetAllTagsParams) {
 				break;
 		}
 
-		const tags = await Tag.find(query).sort(sortOptions);
+		const tags = await Tag.find(query)
+			.skip(skipAmount)
+			.limit(pageSize)
+			.sort(sortOptions);
 
-		return { tags };
+		const totalTags = await Tag.countDocuments(query);
+
+		const isNext = totalTags > skipAmount + tags.length;
+
+		return { tags, isNext };
 	} catch (error) {
 		console.log(error);
 		throw new Error('No tag founded!');
@@ -80,6 +89,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
 		const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
+		const skipAmount = (page - 1) * pageSize;
+
 		const tag = await Tag.findOne(tagFilter).populate({
 			path: 'questions',
 			model: Question,
@@ -88,6 +99,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 				: {},
 			options: {
 				sort: { createdAt: -1 },
+				skip: skipAmount,
+				limit: pageSize, // +1 for checking if having next page
 			},
 			populate: [
 				{ path: 'tags', model: Tag, select: '_id name' },
@@ -95,15 +108,18 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 			],
 		});
 		// populate อันนี้จะเป็นการดึงข้อมูลจาก path question ไม่ใช่จาก tag โดยตรง
+
 		if (!tag) {
 			console.log('Tag not found');
 		}
 
 		const questions = tag.questions;
 
+		const isNext = tag.questions.length > pageSize;
+
 		// console.log(tag.questions);
 
-		return { tagTitle: tag.name, questions };
+		return { tagTitle: tag.name, questions, isNext };
 	} catch (error) {
 		console.log(error);
 		throw error;

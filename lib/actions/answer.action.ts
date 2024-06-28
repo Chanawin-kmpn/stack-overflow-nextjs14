@@ -40,7 +40,9 @@ export async function getAnswers(params: GetAnswersParams) {
 	try {
 		connectToDatabase();
 
-		const { questionId, sortBy } = params;
+		const { questionId, sortBy, page = 1, pageSize = 10 } = params;
+
+		const skipAmount = (page - 1) * pageSize;
 
 		let sortOptions = {};
 
@@ -64,10 +66,19 @@ export async function getAnswers(params: GetAnswersParams) {
 
 		const answers = await Answer.find({ question: questionId })
 			.populate('author', '_id clerkId name picture')
+			.skip(skipAmount)
+			.limit(pageSize + 1)
 			.sort(sortOptions);
 
-		return { answers };
-	} catch (error) {}
+		const totalAnswer = await Answer.countDocuments({ question: questionId });
+
+		const isNextAnswer = totalAnswer > skipAmount + answers.length;
+
+		return { answers, isNextAnswer };
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
 }
 
 export async function upvoteAnswer(params: AnswerVoteParams) {
