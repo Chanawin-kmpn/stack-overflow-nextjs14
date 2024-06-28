@@ -1,6 +1,6 @@
 'use client';
 import { Input } from '@/components/ui/input';
-import { formUrlQuery, removeKeysFormQuery } from '@/lib/utils';
+import { formUrlQuery, removeKeysFromQuery } from '@/lib/utils';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -36,7 +36,7 @@ const LocalSearchbar = ({
 				router.push(newUrl, { scroll: false });
 			} else {
 				if (pathname === route) {
-					const newUrl = removeKeysFormQuery({
+					const newUrl = removeKeysFromQuery({
 						params: searchParams.toString(),
 						keysToRemove: ['q'],
 					});

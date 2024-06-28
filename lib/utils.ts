@@ -90,7 +90,7 @@ interface RemoveUrlQueryParams {
 	keysToRemove: string[];
 }
 
-export const removeKeysFormQuery = ({
+export const removeKeysFromQuery = ({
 	params,
 	keysToRemove,
 }: RemoveUrlQueryParams) => {
