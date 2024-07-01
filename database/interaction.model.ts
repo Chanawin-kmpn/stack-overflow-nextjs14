@@ -1,4 +1,4 @@
-import { Schema, model, models, Document, Date } from 'mongoose';
+import { Schema, model, models, Document } from 'mongoose';
 
 export interface IInteraction extends Document {
 	user: Schema.Types.ObjectId;
