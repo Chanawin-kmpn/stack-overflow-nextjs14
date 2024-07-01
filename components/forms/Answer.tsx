@@ -102,14 +102,20 @@ const Answer = ({ question, questionId, authorId }: Props) => {
 						});
 					}}
 				>
-					<Image
-						src="/assets/icons/stars.svg"
-						width={12}
-						height={12}
-						alt="star"
-						className="object-contain"
-					/>
-					Generate AI Answer
+					{isSubmittingAI ? (
+						<>Generating...</>
+					) : (
+						<>
+							<Image
+								src="/assets/icons/stars.svg"
+								alt="star"
+								width={12}
+								height={12}
+								className="object-contain"
+							/>
+							Generate AI Answer
+						</>
+					)}
 				</Button>
 			</div>
 			<Form {...form}>
