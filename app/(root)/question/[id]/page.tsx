@@ -8,8 +8,14 @@ import { getQuestionById } from '@/lib/actions/question.action';
 import { getUserById } from '@/lib/actions/user.action';
 import { getTimestamp, formatAndDivideNumber } from '@/lib/utils';
 import { auth } from '@clerk/nextjs/server';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+	title: 'Question | Dev Overflow',
+	description: 'Dev Overflow is a community of 1,000,000+ developers. Join us.',
+};
 
 const page = async ({ params, searchParams }: any) => {
 	const { userId: clerkId } = auth();

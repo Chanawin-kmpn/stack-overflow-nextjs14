@@ -17,6 +17,7 @@ import { z } from 'zod';
 import { Textarea } from '@/components/ui/textarea';
 import { usePathname, useRouter } from 'next/navigation';
 import { updateUser } from '@/lib/actions/user.action';
+import { toast } from '../ui/use-toast';
 
 interface Props {
 	clerkId: string;
@@ -65,6 +66,10 @@ const Profile = ({ clerkId, user }: Props) => {
 		}
 
 		console.log(values);
+		return toast({
+			title: 'Your profile updated',
+			description: 'Your profile has been updated to data',
+		});
 	}
 
 	return (

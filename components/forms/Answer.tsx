@@ -18,6 +18,7 @@ import { Button } from '../ui/button';
 import Image from 'next/image';
 import { createAnswer } from '@/lib/actions/answer.action';
 import { usePathname } from 'next/navigation';
+import { toast } from '../ui/use-toast';
 
 interface Props {
 	question: string;
@@ -92,7 +93,14 @@ const Answer = ({ question, questionId, authorId }: Props) => {
 
 				<Button
 					className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-					onClick={generateAIAnswer}
+					onClick={() => {
+						generateAIAnswer();
+						toast({
+							title: '🐱‍💻 Code Cat Approved',
+							description:
+								"🐾 Your profile information has been certified 'purr-fect' by Code Cats worldwide! Meow-tastic!",
+						});
+					}}
 				>
 					<Image
 						src="/assets/icons/stars.svg"

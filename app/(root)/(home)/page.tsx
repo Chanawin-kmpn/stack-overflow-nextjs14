@@ -8,7 +8,13 @@ import { Button } from '@/components/ui/button';
 import { HomePageFilters } from '@/constants/filter';
 import { getQuestions } from '@/lib/actions/question.action';
 import { SearchParamsProps } from '@/types';
+import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+	title: 'Home | Dev Overflow',
+	description: 'Dev Overflow is a community of 1,000,000+ developers. Join us.',
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
 	const result = await getQuestions({

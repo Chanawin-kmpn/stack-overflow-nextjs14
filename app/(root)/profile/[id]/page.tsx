@@ -10,9 +10,15 @@ import { getJoinedDate } from '@/lib/utils';
 import { URLProps } from '@/types';
 import { SignedIn } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+
+export const metadata: Metadata = {
+	title: 'Profile | Dev Overflow',
+	description: 'Dev Overflow is a community of 1,000,000+ developers. Join us.',
+};
 
 const Page = async ({ params, searchParams }: URLProps) => {
 	const { userId: clerkId } = auth();
