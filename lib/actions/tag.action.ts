@@ -106,6 +106,7 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 				{ path: 'author', model: User, select: '_id clerkId name picture' },
 			],
 		});
+		// populate อันนี้จะเป็นการดึงข้อมูลจาก path question ไม่ใช่จาก tag โดยตรง
 
 		if (!tag) {
 			throw new Error('Tag not found');
