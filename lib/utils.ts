@@ -115,7 +115,7 @@ interface BadgesParams {
 	};
 }
 
-export const assignBadges = (params: BadgeParam) => {
+export const assignBadges = (params: BadgesParams) => {
 	const badgeCounts: BadgeCounts = {
 		GOLD: 0,
 		SILVER: 0,
@@ -123,9 +123,10 @@ export const assignBadges = (params: BadgeParam) => {
 	};
 
 	const { criteria } = params;
-
-	criteria.forEach((item) => {
+	// @ts-ignore
+	criteria.forEach((item: any) => {
 		const { type, count } = item;
+		// @ts-ignore
 		const badgeLevels: any = BADGE_CRITERIA[type];
 
 		Object.keys(badgeLevels).forEach((level: any) => {

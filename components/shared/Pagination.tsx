@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { formUrlQuery, removeKeysFormQuery } from '@/lib/utils';
+import { formUrlQuery, removeKeysFromQuery } from '@/lib/utils';
 
 interface Props {
 	pageNumber: number;
@@ -27,7 +27,7 @@ const Pagination = ({ pageNumber, isNext }: Props) => {
 	};
 
 	if (query === '1') {
-		const newUrl = removeKeysFormQuery({
+		const newUrl = removeKeysFromQuery({
 			params: searchParams.toString(),
 			keysToRemove: ['page'],
 		});

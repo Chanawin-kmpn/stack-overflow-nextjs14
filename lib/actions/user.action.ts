@@ -18,7 +18,6 @@ import Question from '@/database/question.model';
 import Tag from '@/database/tag.model';
 import Answer from '@/database/answer.model';
 import { BadgeCriteriaType } from '@/types';
-import { count } from 'console';
 import { assignBadges } from '../utils';
 
 export async function getUserById(params: GetUserByIdParams) {
@@ -301,6 +300,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
 			},
 		];
 
+		// @ts-ignore
 		const badgeCounts = assignBadges({ criteria });
 		return {
 			user,
