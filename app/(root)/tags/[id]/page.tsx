@@ -4,6 +4,22 @@ import Pagination from '@/components/shared/Pagination';
 import LocalSearchbar from '@/components/shared/search/LocalSearchbar';
 import { getQuestionsByTagId } from '@/lib/actions/tag.action';
 import { URLProps } from '@/types';
+import { Metadata, ResolvingMetadata } from 'next';
+
+export async function generateMetadata(
+	{ params, searchParams }: URLProps,
+	parent: ResolvingMetadata
+): Promise<Metadata> {
+	const id = params.id;
+
+	const result = await getQuestionsByTagId({
+		tagId: id,
+	});
+
+	return {
+		title: `${result.tagTitle} Tags | Devflows`,
+	};
+}
 
 export default async function page({ params, searchParams }: URLProps) {
 	const result = await getQuestionsByTagId({
