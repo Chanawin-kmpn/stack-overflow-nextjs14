@@ -85,11 +85,10 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 	try {
 		connectToDatabase();
 
-		const { tagId, searchQuery, page = 1, pageSize = 10 } = params;
+		const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+		const skipAmount = (page - 1) * pageSize;
 
 		const tagFilter: FilterQuery<ITag> = { _id: tagId };
-
-		const skipAmount = (page - 1) * pageSize;
 
 		const tag = await Tag.findOne(tagFilter).populate({
 			path: 'questions',
@@ -100,24 +99,21 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 			options: {
 				sort: { createdAt: -1 },
 				skip: skipAmount,
-				limit: pageSize, // +1 for checking if having next page
+				limit: pageSize + 1, // +1 to check if there is next page
 			},
 			populate: [
 				{ path: 'tags', model: Tag, select: '_id name' },
 				{ path: 'author', model: User, select: '_id clerkId name picture' },
 			],
 		});
-		// populate อันนี้จะเป็นการดึงข้อมูลจาก path question ไม่ใช่จาก tag โดยตรง
 
 		if (!tag) {
-			console.log('Tag not found');
+			throw new Error('Tag not found');
 		}
-
-		const questions = tag.questions;
 
 		const isNext = tag.questions.length > pageSize;
 
-		// console.log(tag.questions);
+		const questions = tag.questions;
 
 		return { tagTitle: tag.name, questions, isNext };
 	} catch (error) {
