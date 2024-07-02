@@ -66,22 +66,44 @@ const Answer = ({ question, questionId, authorId }: Props) => {
 
 	const generateAIAnswer = async () => {
 		if (!authorId) return;
-
 		setIsSubmittingAI(true);
 
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
-				{ method: 'POST', body: JSON.stringify({ question }) }
+				`${process.env.NEXT_PUBLIC_SERVER_URL}/api/openai`,
+				{
+					method: 'POST',
+					body: JSON.stringify({ question }),
+				}
 			);
 
 			const aiAnswer = await response.json();
 
-			alert(aiAnswer.reply);
-		} catch (error) {
+			const formattedAiAnswer = aiAnswer.error
+				? 'Sorry, I could not provide an answer to your question, please try again.'
+				: aiAnswer.reply.replace(/\n/g, '<br />');
+
+			if (editorRef.current) {
+				const editor = editorRef.current as any;
+				editor.setContent(formattedAiAnswer);
+			}
+
+			console.log(response);
+		} catch (error: any) {
+			toast({
+				title: 'Error generating AI answer ⚠️',
+				variant: 'destructive',
+			});
+
 			console.log(error);
+			throw error;
 		} finally {
 			setIsSubmittingAI(false);
+
+			toast({
+				title: 'AI answer generated successfully 🎉',
+				variant: 'default',
+			});
 		}
 	};
 	return (
@@ -93,14 +115,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
 
 				<Button
 					className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-					onClick={() => {
-						generateAIAnswer();
-						toast({
-							title: '🐱‍💻 Code Cat Approved',
-							description:
-								"🐾 Your profile information has been certified 'purr-fect' by Code Cats worldwide! Meow-tastic!",
-						});
-					}}
+					onClick={generateAIAnswer}
 				>
 					{isSubmittingAI ? (
 						<>Generating...</>

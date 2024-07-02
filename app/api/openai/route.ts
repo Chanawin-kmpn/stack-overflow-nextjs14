@@ -1,31 +1,38 @@
 import { NextResponse } from 'next/server';
 
+const config = {
+	apiKey: process.env.OPENAI_API_KEY as string,
+	apiHost: 'https://api.openai.com/v1/chat/completions',
+	systemContent:
+		'You are a knowlegeable assistant that provides quality information.',
+	userContent: (question: string) => `Tell me ${question}`,
+};
+
 export const POST = async (request: Request) => {
 	const { question } = await request.json();
 
 	try {
-		const response = await fetch('https://api.openai.com/v1/chat/completions', {
+		const response = await fetch(config.apiHost, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+				Authorization: `Bearer ${config.apiKey}}`,
 			},
 			body: JSON.stringify({
 				model: 'gpt-3.5-turbo',
 				messages: [
 					{
 						role: 'system',
-						content:
-							'You are a knowlegeable assistant that provides quality information.',
+						content: config.systemContent,
 					},
 					{
 						role: 'user',
-						content: `Tell me ${question}`,
+						content: config.userContent(question),
 					},
 				],
 			}),
 		});
-
+		console.log(question);
 		const responseData = await response.json();
 		const reply = responseData.choices[0].message.content;
 

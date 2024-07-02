@@ -49,7 +49,7 @@ const AllAnswer = async ({
 									src={answer.author.picture}
 									width={18}
 									height={18}
-									alt="profilt"
+									alt="profile"
 									className="rounded-full object-cover max-sm:mt-0.5"
 								/>
 								<div className="flex flex-col sm:flex-row sm:items-center">
