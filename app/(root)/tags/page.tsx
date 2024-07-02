@@ -1,4 +1,5 @@
 import Filter from '@/components/shared/Filter';
+import NoResult from '@/components/shared/NoResult';
 import Pagination from '@/components/shared/Pagination';
 import LocalSearchbar from '@/components/shared/search/LocalSearchbar';
 import { TagFilters } from '@/constants/filter';
@@ -59,7 +60,14 @@ const page = async ({ searchParams }: SearchParamsProps) => {
 						</Link>
 					))
 				) : (
-					<div>No tags result!</div>
+					<NoResult
+						title="There's no tag to show"
+						description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
+				discussion. our query could be the next big thing others learn from. Get
+				involved! 💡"
+						link="/ask-question"
+						linkTitle="Ask a Question"
+					/>
 				)}
 			</section>
 			<div className="mt-10">
