@@ -1,9 +1,16 @@
-import React from 'react'
+import { Metadata } from 'next';
+import React from 'react';
 
-const Layout = ({children} : {children: React.ReactNode}) => {
-  return (
-    <main className='flex min-h-screen w-full items-center justify-center'>{children}</main>
-  )
-}
+export const metadata: Metadata = {
+	title: 'Auth — DevOverflow',
+};
 
-export default Layout
+const Layout = ({ children }: { children: React.ReactNode }) => {
+	return (
+		<main className="flex min-h-screen w-full items-center justify-center">
+			{children}
+		</main>
+	);
+};
+
+export default Layout;
